@@ -1,0 +1,15 @@
+node_modules
+.DS_Store
+dist
+dist-ssr
+*.local
+
+# ide
+.vscode
+.idea
+
+# cpp
+a.out
+.o
+.so
+
