@@ -160,7 +160,7 @@ int ping_isok(void *ctx) {
     return (ping && ping->tickrecv && (int32_t)get_tick_count() - (int32_t)ping->tickrecv < ping->timeout);
 }
 
-#ifdef _TEST_
+#if TEST
 static void ping_callback(void *cbctx, char *ip, int bytes, int ttl, int time, int seq) {
     printf("reply from %s, bytes: %d, ttl: %dms, time: %dms, seq: %d\n", ip, bytes, ttl, time, seq); fflush(stdout);
 }
