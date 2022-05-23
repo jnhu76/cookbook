@@ -13,3 +13,6 @@ a.out
 .o
 .so
 
+# xmake
+.xmake/
+build/
