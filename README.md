@@ -4,5 +4,5 @@
 
 1. 扫雷
 
-2. ping
+2. cache-size
 
