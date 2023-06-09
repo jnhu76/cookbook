@@ -2,7 +2,7 @@
 #include <iostream>
 
 const size_t fib(const size_t i) {
-    constexpr auto sqrt_5 = std::sqrt(5);
+    const auto sqrt_5 = std::sqrt(5);
     if (i == 0) return 0;
     if (i == 1) return 1;
 
