@@ -6,6 +6,10 @@
 #include <iostream>
 #include <functional>
 
+#if defined(_MSC_VER)
+#include <intrin.h>  // for "_addcarry_u32"
+#endif 
+
 // 小学生编程
 unsigned AverageLevel1(unsigned a, unsigned b) {
     return (a + b) / 2;
@@ -43,14 +47,13 @@ unsigned AverageLevel5(unsigned a, unsigned b) {
     return __builtin_rotateright32(sum, 1);
 #else
 #error Unsupported compiler.
-return 0;
 #endif
 }
 
-using time_count = std::chrono::milliseconds::rep;
+using time_count = std::chrono::system_clock::rep;
 template<typename ...Args>
-auto measure(std::function<unsigned(unsigned, unsigned)> f,Args... as)
- -> std::tuple<unsigned, time_count> {
+auto measure(std::function<unsigned(unsigned, unsigned)> f, Args... as)
+-> std::tuple<unsigned, time_count> {
     auto start = std::chrono::high_resolution_clock::now();
     auto res = f(as...);
     auto end = std::chrono::high_resolution_clock::now();
