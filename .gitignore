@@ -16,6 +16,3 @@ a.out
 # xmake
 .xmake/
 build/
-
-.vscode
-.idea
