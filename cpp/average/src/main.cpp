@@ -50,7 +50,7 @@ unsigned AverageLevel5(unsigned a, unsigned b) {
 #endif
 }
 
-using time_count = std::chrono::system_clock::rep;
+using time_count = std::chrono::high_resolution_clock::rep;
 template<typename ...Args>
 auto measure(std::function<unsigned(unsigned, unsigned)> f, Args... as)
 -> std::tuple<unsigned, time_count> {

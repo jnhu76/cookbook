@@ -13,4 +13,4 @@ target("average")
     add_files("src/*.cpp")
     set_languages("c17", "cxx20")
     set_warnings("all", "error")
-    set_optimize("none") -- none, fast, faster, fastest, smallest, aggressive
+    set_optimize("fastest") -- none, fast, faster, fastest, smallest, aggressive
