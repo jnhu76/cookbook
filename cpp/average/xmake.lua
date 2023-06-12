@@ -14,3 +14,4 @@ target("average")
     set_languages("c17", "cxx20")
     set_warnings("all", "error")
     set_optimize("fastest") -- none, fast, faster, fastest, smallest, aggressive
+    add_vectorexts("avx2") -- "sse", "sse2", "sse3", "ssse3", "avx", "avx2"
