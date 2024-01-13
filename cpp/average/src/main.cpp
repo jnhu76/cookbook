@@ -2,13 +2,29 @@
 #include <chrono>
 #include <random>
 #include <limits>
+#include <thread>
 #include <vector>
+#include <iomanip>
 #include <iostream>
 #include <functional>
+
+#define TIMES 10000
 
 #if defined(_MSC_VER)
 #include <intrin.h>  // for "_addcarry_u32"
 #endif 
+
+int64_t clock_realtime()
+{
+    return std::chrono::duration_cast<std::chrono::nanoseconds>(
+        std::chrono::system_clock::now().time_since_epoch()).count();
+}
+
+void isleep(unsigned long millisecond)
+{
+    std::this_thread::sleep_for(std::chrono::milliseconds(millisecond));
+}
+
 
 // 小学生编程
 unsigned AverageLevel1(unsigned a, unsigned b) {
@@ -28,8 +44,8 @@ unsigned AverageLevel3(unsigned a, unsigned b) {
 
 // SWAR（SIMD within a register）
 unsigned AverageLevel4(unsigned a, unsigned b) {
-    // Suppose "unsigned" is a 32-bit type and
-    // "unsigned long long" is a 64-bit type.
+    // Suppose "unsigned"=a 32-bit type and
+    // "unsigned long long"=a 64-bit type.
     return ((unsigned long long) a + b) / 2;
 }
 
@@ -54,11 +70,14 @@ using time_count = std::chrono::high_resolution_clock::rep;
 template<typename ...Args>
 auto measure(std::function<unsigned(unsigned, unsigned)> f, Args... as)
 -> std::tuple<unsigned, time_count> {
-    auto start = std::chrono::high_resolution_clock::now();
-    auto res = f(as...);
-    auto end = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
-    return std::make_pair(duration, res);
+    isleep(1000);
+    auto ts = clock_realtime();
+    unsigned int res {0};
+    for (auto i=0;i<TIMES;++i) {
+        res = f(as...);
+    }
+    ts = clock_realtime() - ts;
+    return std::make_pair(ts, res);
 }
 
 int main() {
@@ -68,17 +87,18 @@ int main() {
 
 
     unsigned a = dist(rng), b = dist(rng);
-    auto res1 = measure(AverageLevel1, a, b);
-    auto res2 = measure(AverageLevel2, a, b);
-    auto res3 = measure(AverageLevel3, a, b);
-    auto res4 = measure(AverageLevel4, a, b);
-    auto res5 = measure(AverageLevel5, a, b);
+    auto benchmark1 = measure(AverageLevel1, a, b);
+    auto benchmark2 = measure(AverageLevel2, a, b);
+    auto benchmark3 = measure(AverageLevel3, a, b);
+    auto benchmark4 = measure(AverageLevel4, a, b);
+    auto benchmark5 = measure(AverageLevel5, a, b);
 
-    std::cout << "AverageLevel1 result is " << std::get<1>(res1) << ", time is " << std::get<0>(res1) << "\n";
-    std::cout << "AverageLevel2 result is " << std::get<1>(res2) << ", time is " << std::get<0>(res2) << "\n";
-    std::cout << "AverageLevel3 result is " << std::get<1>(res3) << ", time is " << std::get<0>(res3) << "\n";
-    std::cout << "AverageLevel4 result is " << std::get<1>(res4) << ", time is " << std::get<0>(res4) << "\n";
-    std::cout << "AverageLevel5 result is " << std::get<1>(res5) << ", time is " << std::get<0>(res5) << "\n";
+    std::cout << "A=" << a << ", B=" <<  b << "\n";
+    std::cout << "Benchmark: result =" << std::setw(12) << std::get<1>(benchmark1) << ", time = " << std::get<0>(benchmark1) << "\n";
+    std::cout << "Benchmark: result =" << std::setw(12) << std::get<1>(benchmark2) << ", time = " << std::get<0>(benchmark2) << "\n";
+    std::cout << "Benchmark: result =" << std::setw(12) << std::get<1>(benchmark3) << ", time = " << std::get<0>(benchmark3) << "\n";
+    std::cout << "Benchmark: result =" << std::setw(12) << std::get<1>(benchmark4) << ", time = " << std::get<0>(benchmark4) << "\n";
+    std::cout << "Benchmark: result =" << std::setw(12) << std::get<1>(benchmark5) << ", time = " << std::get<0>(benchmark5) << "\n";
 
     return 0;
 }
